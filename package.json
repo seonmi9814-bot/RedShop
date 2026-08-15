@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/seonmi9814-bot/RedShop#readme",
   "dependencies": {
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
   }
 }
