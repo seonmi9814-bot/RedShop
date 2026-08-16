@@ -7,7 +7,11 @@
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;background:#09090b;color:#f5f5f5}
 a{text-decoration:none;color:inherit}.nav{height:76px;border-bottom:1px solid #202024;display:flex;align-items:center;justify-content:space-between;padding:0 7%;background:rgba(11, 11, 13, 0.85);backdrop-filter:blur(10px);position:sticky;top:0;z-index:10}
-.logo{font-size:24px;font-weight:900;letter-spacing:2px}.logo span{color:#ff3030}.navlinks{display:flex;gap:30px;color:#a1a1aa;font-size:14px;font-weight:500}.navlinks a:hover{color:#fff}
+.nav-left{display:flex;align-items:center;gap:15px}
+.logo{font-size:24px;font-weight:900;letter-spacing:2px}.logo span{color:#ff3030}
+.design-btn{background:#3f3f46;color:#fff;border:0;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:none;transition:.2s}
+.design-btn:hover{background:#52525b}
+.navlinks{display:flex;gap:30px;color:#a1a1aa;font-size:14px;font-weight:500}.navlinks a:hover{color:#fff}
 .nav-right{display:flex;align-items:center;gap:12px}
 .discord-login-btn{background:#5865F2;color:#fff;padding:8px 14px;border-radius:12px;font-size:14px;font-weight:600;transition:.2s}
 .discord-login-btn:hover{background:#4752C4}
@@ -24,7 +28,7 @@ h1{font-size:52px;margin:20px 0 12px;font-weight:800;line-height:1.2}.hero p{col
 .buy{width:100%;border:0;background:#ef4444;color:white;padding:13px;border-radius:10px;font-weight:700;cursor:pointer;transition:.2s}.buy:hover{background:#dc2626}
 footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a;font-size:13px;background:#0b0b0d}
 
-/* 모달 스타일 */
+/* 모달 스타일 통일 */
 .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:100;display:none}
 .modal{background:#121216;border:1px solid #27272a;border-radius:20px;width:450px;padding:30px;position:relative;box-shadow:0 20px 40px rgba(0,0,0,0.8)}
 .modal-close{position:absolute;top:20px;right:20px;background:none;border:0;color:#a1a1aa;font-size:20px;cursor:pointer}
@@ -35,9 +39,9 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 .notice-box b{color:#f87171}
 .modal-group{margin-bottom:14px}
 .modal-label{font-size:13px;color:#a1a1aa;margin-bottom:6px;display:block}
-.modal input[type="range"]{width:100%;accent-color:#ef4444;margin-bottom:5px}
-.modal input[type="text"]{width:100%;background:#18181b;border:1px solid #27272a;padding:10px;border-radius:10px;color:#fff;outline:none}
-.modal input[type="text"]:focus{border-color:#ef4444}
+.modal input[type="range"], .modal input[type="text"], .modal select{width:100%;background:#18181b;border:1px solid #27272a;padding:10px;border-radius:10px;color:#fff;outline:none}
+.modal input[type="range"]{accent-color:#ef4444;margin-bottom:5px}
+.modal input[type="text"]:focus, .modal select:focus{border-color:#ef4444}
 .modal-total{display:flex;justify-content:space-between;align-items:center;margin:15px 0;padding-top:15px;border-top:1px solid #202024}
 .modal-total .price{color:#ef4444}
 .modal-btn{width:100%;background:#ef4444;color:white;border:0;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;font-size:15px}
@@ -51,7 +55,10 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 </head>
 <body>
 <nav class="nav">
-  <div class="logo">RED<span>.</span>SHOP</div>
+  <div class="nav-left">
+    <div class="logo">RED<span>.</span>SHOP</div>
+    <button class="design-btn" id="designBtn" onclick="openDesignModal()">디자인 (관리자)</button>
+  </div>
   <div class="navlinks">
     <a href="#products">상품목록</a>
     <a href="#" onclick="openSupportModal(event)">고객지원</a>
@@ -69,118 +76,69 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 </header>
 
 <main class="wrap" id="products">
-  <!-- 디스코드 서비스 카테고리 -->
-  <h2 class="section-title">디스코드 서비스</h2>
-  <div class="grid" style="margin-bottom: 50px;">
-    <article class="card">
-      <div><div class="icon">✨</div><h3>디스코드 니트로 프라임 1달</h3><div class="desc">프리미엄 혜택이 담긴 니트로 1달 이용권</div></div>
-      <div class="price-area"><div class="price">4,900원</div></div>
-      <button class="buy" onclick="openModal('디스코드 니트로 프라임 1달', 4900, 1, '달', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">💎</div><h3>디스코드 니트로 프라임 1년</h3><div class="desc">1년 동안 즐기는 실속 있는 니트로 패키지</div></div>
-      <div class="price-area"><div class="price">49,000원</div></div>
-      <button class="buy" onclick="openModal('디스코드 니트로 프라임 1년', 49000, 1, '년', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🎨</div><h3>디스코드 무한장식</h3><div class="desc">무제한 프로필 아바타 장식 이용권</div></div>
-      <div class="price-area"><div class="price">50,000원</div></div>
-      <button class="buy" onclick="openModal('디스코드 무한장식', 50000, 1, '개', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🚀</div><h3>서버부스트 1달 (2개 단위)</h3><div class="desc">Discord 서버 레벨업 및 고음질 혜택</div></div>
-      <div class="price-area"><div class="price">750원 / 2개</div></div>
-      <button class="buy" onclick="openModal('서버부스트 1달', 750, 2, '개', 'boost')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🚀</div><h3>서버부스트 3달 (2개 단위)</h3><div class="desc">3개월 장기 서버 부스트 패키지</div></div>
-      <div class="price-area"><div class="price">2,000원 / 2개</div></div>
-      <button class="buy" onclick="openModal('서버부스트 3달', 2000, 2, '개', 'boost')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🔑</div><h3>복구키 온라인 (1,000명 단위)</h3><div class="desc">서버 데이터 및 구성 관리를 위한 복구키</div></div>
-      <div class="price-area"><div class="price">10,000원 / 1천명</div></div>
-      <button class="buy" onclick="openModal('복구키 온라인', 10000, 1000, '명', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">👥</div><h3>디스코드 실인원 (500명 단위)</h3><div class="desc">서버 활성화를 위한 실인원 충전</div></div>
-      <div class="price-area"><div class="price">10,000원 / 500명</div></div>
-      <button class="buy" onclick="openModal('디스코드 실인원', 10000, 500, '명', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🛡️</div><h3>오프라인 멤버 (1,000명 단위)</h3><div class="desc">1,000명당 7,500원 구성</div></div>
-      <div class="price-area"><div class="price">7,500원 / 1천명</div></div>
-      <button class="buy" onclick="openModal('오프라인 멤버', 7500, 1000, '명', 'normal')">구매하기</button>
-    </article>
-  </div>
-
-  <!-- OTT 및 프리미엄 서비스 카테고리 -->
-  <h2 class="section-title">OTT 및 프리미엄 서비스</h2>
-  <div class="grid">
-    <article class="card">
-      <div><div class="icon">🍿</div><h3>디즈니 플러스 (영구제)</h3><div class="desc">디즈니 플러스 무제한 이용권</div></div>
-      <div class="price-area"><div class="price">3,000원</div></div>
-      <button class="buy" onclick="openModal('디즈니 플러스 (영구제)', 3000, 1, '개', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🎬</div><h3>캡컷 (영구제)</h3><div class="desc">영상 편집 프로 기능 이용권</div></div>
-      <div class="price-area"><div class="price">4,000원</div></div>
-      <button class="buy" onclick="openModal('캡컷 (영구제)', 4000, 1, '개', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🔒</div><h3>노드 VPN (영구제)</h3><div class="desc">안전하고 빠른 보안 VPN</div></div>
-      <div class="price-area"><div class="price">7,000원</div></div>
-      <button class="buy" onclick="openModal('노드 VPN (영구제)', 7000, 1, '개', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🎬</div><h3>넷플릭스 (영구제)</h3><div class="desc">고화질 영화 및 드라마 스트리밍</div></div>
-      <div class="price-area"><div class="price">3,000원</div></div>
-      <button class="buy" onclick="openModal('넷플릭스 (영구제)', 3000, 1, '개', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🤖</div><h3>챗지피티 (영구제)</h3><div class="desc">AI 챗봇 프리미엄 서비스 이용권</div></div>
-      <div class="price-area"><div class="price">25,000원</div></div>
-      <button class="buy" onclick="openModal('챗지피티 (영구제)', 25000, 1, '개', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">🎵</div><h3>스포티파이 (영구제)</h3><div class="desc">무제한 음악 스트리밍 서비스</div></div>
-      <div class="price-area"><div class="price">12,000원</div></div>
-      <button class="buy" onclick="openModal('스포티파이 (영구제)', 12000, 1, '개', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">▶️</div><h3>유튜브 프리미엄 (1달)</h3><div class="desc">광고 없는 동영상 및 유튜브 뮤직</div></div>
-      <div class="price-area"><div class="price">5,000원</div></div>
-      <button class="buy" onclick="openModal('유튜브 프리미엄 1달', 5000, 1, '달', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">▶️</div><h3>유튜브 프리미엄 (3달)</h3><div class="desc">3개월 실속형 프리미엄 패키지</div></div>
-      <div class="price-area"><div class="price">10,000원</div></div>
-      <button class="buy" onclick="openModal('유튜브 프리미엄 3달', 10000, 1, '달', 'normal')">구매하기</button>
-    </article>
-
-    <article class="card">
-      <div><div class="icon">▶️</div><h3>유튜브 프리미엄 (1년)</h3><div class="desc">1년 동안 즐기는 유튜브 프리미엄</div></div>
-      <div class="price-area"><div class="price">15,000원</div></div>
-      <button class="buy" onclick="openModal('유튜브 프리미엄 1년', 15000, 1, '년', 'normal')">구매하기</button>
-    </article>
-  </div>
+  <!-- 동적으로 상품 목록이 채워지는 영역 -->
 </main>
 
 <footer id="support">RED SHOP · All Rights Reserved.</footer>
+
+<!-- 디자인(관리자) 모달창 -->
+<div class="modal-bg" id="designModalBg">
+  <div class="modal">
+    <button class="modal-close" onclick="closeDesignModal()">✕</button>
+    <h2>쇼핑몰 관리자 디자인</h2>
+    <div class="modal-sub">상품 및 카테고리 추가</div>
+    
+    <div class="notice-box">
+      • 추가된 상품은 모든 사용자 화면에 실시간으로 반영됩니다.
+    </div>
+
+    <div class="modal-group">
+      <span class="modal-label">작업 선택</span>
+      <select id="adminActionType" onchange="toggleAdminFields()">
+        <option value="product">새 상품 추가</option>
+        <option value="category">새 카테고리 추가</option>
+      </select>
+    </div>
+
+    <div id="productFields">
+      <div class="modal-group">
+        <span class="modal-label">추가할 카테고리 위치</span>
+        <select id="targetCategory">
+          <option value="discord">디스코드 서비스</option>
+          <option value="ott">OTT 및 프리미엄 서비스</option>
+        </select>
+      </div>
+      <div class="modal-group">
+        <span class="modal-label">상품 아이콘 (이모지)</span>
+        <input type="text" id="newProdIcon" placeholder="예: 🚀">
+      </div>
+      <div class="modal-group">
+        <span class="modal-label">상품 이름</span>
+        <input type="text" id="newProdName" placeholder="예: 신규 상품 이름">
+      </div>
+      <div class="modal-group">
+        <span class="modal-label">상품 설명</span>
+        <input type="text" id="newProdDesc" placeholder="예: 상품에 대한 간단한 설명">
+      </div>
+      <div class="modal-group">
+        <span class="modal-label">가격 (숫자만) 및 단위</span>
+        <div style="display:flex; gap:10px;">
+          <input type="text" id="newProdPrice" placeholder="가격 (예: 5000)">
+          <input type="text" id="newProdUnit" placeholder="단위 (예: 개, 달, 명)" style="width:100px;">
+        </div>
+      </div>
+    </div>
+
+    <div id="categoryFields" style="display:none;">
+      <div class="modal-group">
+        <span class="modal-label">새 카테고리 이름</span>
+        <input type="text" id="newCategoryName" placeholder="예: 게임 및 기타 서비스">
+      </div>
+    </div>
+
+    <button class="modal-btn" style="margin-top:10px;" onclick="executeAdminAction()">적용하기</button>
+  </div>
+</div>
 
 <!-- 구매 팝업 모달창 -->
 <div class="modal-bg" id="modalBg">
@@ -253,6 +211,80 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 </div>
 
 <script>
+    // 페이지 로드 시 데이터 및 관리자 권한 불러오기
+    document.addEventListener("DOMContentLoaded", () => {
+        loadProducts();
+        checkAdmin();
+    });
+
+    function checkAdmin() {
+        fetch('/api/check-admin')
+            .then(res => res.json())
+            .then(data => {
+                if (data.isAdmin) {
+                    document.getElementById('designBtn').style.display = 'block';
+                }
+            }).catch(err => {});
+    }
+
+    function loadProducts() {
+        fetch('/api/products')
+            .then(res => res.json())
+            .then(data => {
+                const mainContainer = document.getElementById('products');
+                mainContainer.innerHTML = '';
+                
+                const selectTarget = document.getElementById('targetCategory');
+                selectTarget.innerHTML = `
+                    <option value="discord">디스코드 서비스</option>
+                    <option value="ott">OTT 및 프리미엄 서비스</option>
+                `;
+
+                // 1. 디스코드 서비스 카테고리 렌더링
+                renderCategory(mainContainer, '디스코드 서비스', data.discord, 'discord');
+
+                // 2. OTT 서비스 카테고리 렌더링
+                renderCategory(mainContainer, 'OTT 및 프리미엄 서비스', data.ott, 'ott');
+
+                // 3. 커스텀 추가된 카테고리 렌더링
+                if (data.customCategories) {
+                    data.customCategories.forEach(cat => {
+                        renderCategory(mainContainer, cat.name, cat.items, cat.id);
+                        
+                        // 관리자 모달 셀렉트박스에도 추가
+                        const opt = document.createElement('option');
+                        opt.value = cat.id;
+                        opt.textContent = cat.name;
+                        selectTarget.appendChild(opt);
+                    });
+                }
+            });
+    }
+
+    function renderCategory(container, title, items, catId) {
+        const h2 = document.createElement('h2');
+        h2.className = 'section-title';
+        if(container.children.length > 0) h2.style.marginTop = '50px';
+        h2.textContent = title;
+
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+
+        items.forEach(item => {
+            const card = document.createElement('article');
+            card.className = 'card';
+            card.innerHTML = `
+              <div><div class="icon">${item.icon}</div><h3>${item.name}</h3><div class="desc">${item.desc}</div></div>
+              <div class="price-area"><div class="price">${item.price.toLocaleString()}원</div></div>
+              <button class="buy" onclick="openModal('${item.name}', ${item.price}, 1, '${item.unit}', '${item.type}')">구매하기</button>
+            `;
+            grid.appendChild(card);
+        });
+
+        container.appendChild(h2);
+        container.appendChild(grid);
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const username = urlParams.get('username');
     if (username) {
@@ -276,6 +308,68 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 
     function closeCustomAlert() {
         document.getElementById('customAlertBg').style.display = 'none';
+    }
+
+    function openDesignModal() {
+        document.getElementById('designModalBg').style.display = 'flex';
+    }
+
+    function closeDesignModal() {
+        document.getElementById('designModalBg').style.display = 'none';
+    }
+
+    function toggleAdminFields() {
+        const val = document.getElementById('adminActionType').value;
+        if (val === 'product') {
+            document.getElementById('productFields').style.display = 'block';
+            document.getElementById('categoryFields').style.display = 'none';
+        } else {
+            document.getElementById('productFields').style.display = 'none';
+            document.getElementById('categoryFields').style.display = 'block';
+        }
+    }
+
+    function executeAdminAction() {
+        const type = document.getElementById('adminActionType').value;
+        let payload = { type };
+
+        if (type === 'product') {
+            const icon = document.getElementById('newProdIcon').value || '✨';
+            const name = document.getElementById('newProdName').value;
+            const desc = document.getElementById('newProdDesc').value;
+            const price = parseInt(document.getElementById('newProdPrice').value) || 0;
+            const unit = document.getElementById('newProdUnit').value || '개';
+            const category = document.getElementById('targetCategory').value;
+
+            if (!name) {
+                showAlert('상품 이름을 입력해 주세요!');
+                return;
+            }
+
+            payload.category = category;
+            payload.item = { icon, name, desc, price, unit, type: 'normal' };
+        } else {
+            const categoryName = document.getElementById('newCategoryName').value;
+            if (!categoryName) {
+                showAlert('카테고리 이름을 입력해 주세요!');
+                return;
+            }
+            payload.categoryName = categoryName;
+        }
+
+        fetch('/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(res => {
+            if (res.ok) {
+                showAlert('성공적으로 반영되었습니다!', 'success');
+                closeDesignModal();
+                loadProducts(); // 화면 새로고침
+            } else {
+                showAlert('권한이 없거나 오류가 발생했습니다.');
+            }
+        });
     }
 
     function openModal(title, price, unit, uName, type) {
