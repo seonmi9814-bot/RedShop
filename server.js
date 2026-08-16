@@ -1,10 +1,15 @@
+const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const app = express();
+const port = process.env.PORT || 3000;
 
-// 상품 데이터 저장을 위한 JSON 파일 경로
+app.use(express.json());
+app.use(express.static(__dirname));
+
 const dataFilePath = path.join(__dirname, 'products.json');
 
-// 기본 상품 데이터 초기화 (파일이 없으면 생성)
+// 기본 데이터 초기화
 if (!fs.existsSync(dataFilePath)) {
     const initialData = {
         discord: [
@@ -33,45 +38,35 @@ if (!fs.existsSync(dataFilePath)) {
     fs.writeFileSync(dataFilePath, JSON.stringify(initialData, null, 2));
 }
 
-// 관리자 권한 확인 API
 app.get('/api/check-admin', (req, res) => {
     const userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    if (userIp && userIp.includes('183.99.93.5')) {
-        res.json({ isAdmin: true });
-    } else {
-        res.json({ isAdmin: false });
-    }
+    res.json({ isAdmin: userIp && userIp.includes('183.99.93.5') });
 });
 
-// 상품 데이터 불러오기 API
 app.get('/api/products', (req, res) => {
     const data = JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
     res.json(data);
 });
 
-// 상품/카테고리 추가 API (관리자만 가능해야 안전하지만 간소화)
 app.post('/api/products', (req, res) => {
     const userIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    if (!userIp || !userIp.includes('183.99.93.5')) {
-        return res.status(403).json({ error: '권한이 없습니다.' });
-    }
+    if (!userIp || !userIp.includes('183.99.93.5')) return res.status(403).json({ error: '권한 없음' });
 
     const { type, category, item, categoryName } = req.body;
     const data = JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
 
     if (type === 'product') {
-        if (data[category]) {
-            data[category].push(item);
-        } else {
-            // 커스텀 카테고리 내부인 경우
+        if (data[category]) data[category].push(item);
+        else {
             const targetCat = data.customCategories.find(c => c.id === category);
             if (targetCat) targetCat.items.push(item);
         }
     } else if (type === 'category') {
-        const newCatId = 'cat_' + Date.now();
-        data.customCategories.push({ id: newCatId, name: categoryName, items: [] });
+        data.customCategories.push({ id: 'cat_' + Date.now(), name: categoryName, items: [] });
     }
 
     fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
     res.json({ success: true });
 });
+
+app.listen(port, () => console.log(`서버 실행 중: ${port}`));
