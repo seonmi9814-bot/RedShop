@@ -9,8 +9,7 @@
 a{text-decoration:none;color:inherit}.nav{height:76px;border-bottom:1px solid #202024;display:flex;align-items:center;justify-content:space-between;padding:0 7%;background:rgba(11, 11, 13, 0.85);backdrop-filter:blur(10px);position:sticky;top:0;z-index:10}
 .nav-left{display:flex;align-items:center;gap:15px}
 .logo{font-size:24px;font-weight:900;letter-spacing:2px}.logo span{color:#ff3030}
-.navlinks{display:flex;gap:20px;color:#a1a1aa;font-size:14px;font-weight:500}.navlinks a:hover{color:#fff}
-.nav-right{display:flex;align-items:center;gap:12px}
+.navlinks{display:flex;gap:25px;color:#a1a1aa;font-size:14px;font-weight:500;position:absolute;left:50%;transform:translateX(-50%)}.navlinks a{cursor:pointer;transition:.2s}.navlinks a:hover, .navlinks a.active{color:#fff}
 .hero{padding:100px 7% 70px;text-align:center;background:radial-gradient(circle at 50% 0,#450a0a 0,transparent 50%)}
 .badge{display:inline-block;color:#f87171;border:1px solid #7f1d1d;background:#450a0a;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.5px}
 h1{font-size:52px;margin:20px 0 12px;font-weight:800;line-height:1.2}.hero p{color:#a1a1aa;font-size:17px;margin-bottom:30px}.btn{display:inline-block;background:#ef4444;color:white;padding:14px 28px;border-radius:12px;font-weight:700;box-shadow:0 10px 20px rgba(239, 68, 68, 0.2);transition:.2s}.btn:hover{background:#dc2626;transform:translateY(-2px)}
@@ -27,9 +26,14 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 
 /* 판매 전용 폼 스타일 */
 .sell-form{background:#121216;padding:30px;border-radius:16px;border:1px solid #27272a;max-width:600px;margin:auto}
+.notice-box-sell{background:#18181b;border:1px solid #7f1d1d;padding:15px;border-radius:8px;font-size:13px;color:#f87171;margin-bottom:20px;line-height:1.6}
 .form-group{margin-bottom:20px}.form-label{display:block;margin-bottom:8px;font-size:14px;color:#a1a1aa}
 .sell-form input, .sell-form select{width:100%;padding:12px;background:#18181b;border:1px solid #27272a;border-radius:8px;color:#fff;outline:none}
 .sell-form input:focus, .sell-form select:focus{border-color:#ef4444}
+
+/* 탭 전환 컨테이너 */
+.tab-content{display:none}
+.tab-content.active{display:block}
 
 /* 모달 스타일 */
 .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:100;display:none}
@@ -49,7 +53,6 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 .modal-total .price{color:#ef4444}
 .modal-btn{width:100%;background:#ef4444;color:white;border:0;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;font-size:15px}
 .modal-btn:hover{background:#dc2626}
-
 .alert-modal{width:360px;text-align:center;padding:30px 24px}
 .alert-icon{font-size:36px;margin-bottom:12px}
 .alert-msg{font-size:15px;color:#d4d4d8;margin-bottom:24px;line-height:1.5}
@@ -61,29 +64,199 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
     <div class="logo">RED<span>.</span>SHOP</div>
   </div>
   <div class="navlinks">
-    <a href="#products">상품목록</a>
-    <a href="#game-section">게임</a>
-    <a href="#discord-section">디스코드</a>
-    <a href="#ott-section">OTT</a>
-    <a href="#" onclick="openSupportModal(event)">고객지원</a>
-    <a href="#products" style="color:#ef4444">구매</a>
-    <a href="#sell-section" style="color:#ef4444">판매</a>
+    <a onclick="openSupportModal(event)">고객지원</a>
+    <a id="nav-buy" class="active" onclick="switchTab('buy')">구매</a>
+    <a id="nav-sell" onclick="switchTab('sell')">판매</a>
   </div>
   <div class="nav-right"></div>
 </nav>
 
-<header class="hero">
-  <div class="badge">PREMIUM DISCORD & GAME SHOP</div>
-  <h1>디스코드 서버 성장의 완벽한 파트너<br><span style="color:#ff3030">RED SHOP</span></h1>
-  <p>디스코드 서비스 · 게임 재화 및 프리미엄 계정 구독</p>
-  <a class="btn" href="#products">상품 둘러보기</a>
-</header>
+<!-- 구매 탭 내용 -->
+<div id="tab-buy" class="tab-content active">
+  <header class="hero">
+    <div class="badge">PREMIUM DISCORD & GAME SHOP</div>
+    <h1>디스코드 서버 성장의 완벽한 파트너<br><span style="color:#ff3030">RED SHOP</span></h1>
+    <p>디스코드 서비스 · 게임 재화 및 프리미엄 계정 구독</p>
+    <a class="btn" href="#products">상품 둘러보기</a>
+  </header>
 
-<main class="wrap" id="products">
-  <!-- 판매(매입) 신청 섹션 -->
-  <section id="sell-section" style="margin-bottom: 60px;">
+  <main class="wrap" id="products">
+    <!-- 게임 카테고리 -->
+    <div id="game-section" style="margin-bottom: 50px;">
+      <h2 class="section-title">게임 카테고리</h2>
+      <div class="grid">
+        <article class="card">
+          <div><div class="icon">🍓</div><h3>딸기코끼리</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
+          <div class="price-area"><div class="price">500,000원</div></div>
+          <button class="buy" onclick="openModal('딸기코끼리', 500000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🐱</div><h3>미야울</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
+          <div class="price-area"><div class="price">250,000원</div></div>
+          <button class="buy" onclick="openModal('미야울', 250000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🚽</div><h3>스키비디</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
+          <div class="price-area"><div class="price">150,000원</div></div>
+          <button class="buy" onclick="openModal('스키비디', 150000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🐉</div><h3>드래곤</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
+          <div class="price-area"><div class="price">15,000원</div></div>
+          <button class="buy" onclick="openModal('드래곤', 15000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🪙</div><h3>1000 로벅스</h3><div class="desc">로블록스 프리미엄 재화 1000 Robux</div></div>
+          <div class="price-area"><div class="price">5,000원</div></div>
+          <button class="buy" onclick="openModal('1000 로벅스', 5000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">⛏️</div><h3>마인크래프트 계정</h3><div class="desc">정품 마인크래프트 계정 정보 제공</div></div>
+          <div class="price-area"><div class="price">10,000원</div></div>
+          <button class="buy" onclick="openModal('마인크래프트 계정', 10000, 1, '개')">구매하기</button>
+        </article>
+      </div>
+    </div>
+
+    <!-- 디스코드 서비스 카테고리 -->
+    <div id="discord-section" style="margin-bottom: 50px;">
+      <h2 class="section-title">디스코드 서비스</h2>
+      <div class="grid">
+        <article class="card">
+          <div class="stock-badge" style="background:#450a0a; color:#f87171;">재고 1개 남음</div>
+          <div><div class="icon">🛒</div><h3>1800명 거래서버</h3><div class="desc">활성 멤버가 포함된 1800명 규모의 거래 서버 분양</div></div>
+          <div class="price-area"><div class="price">20,000원</div></div>
+          <button class="buy" onclick="openModal('1800명 거래서버', 20000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">✨</div><h3>디스코드 니트로 프라임 1달</h3><div class="desc">프리미엄 혜택이 담긴 니트로 1달 이용권</div></div>
+          <div class="price-area"><div class="price">4,900원</div></div>
+          <button class="buy" onclick="openModal('디스코드 니트로 프라임 1달', 4900, 1, '달')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">💎</div><h3>디스코드 니트로 프라임 1년</h3><div class="desc">1년 동안 즐기는 실속 있는 니트로 패키지</div></div>
+          <div class="price-area"><div class="price">49,000원</div></div>
+          <button class="buy" onclick="openModal('디스코드 니트로 프라임 1년', 49000, 1, '년')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🎨</div><h3>디스코드 무한장식</h3><div class="desc">무제한 프로필 아바타 장식 이용권</div></div>
+          <div class="price-area"><div class="price">50,000원</div></div>
+          <button class="buy" onclick="openModal('디스코드 무한장식', 50000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🚀</div><h3>서버부스트 1달 (2개 단위)</h3><div class="desc">Discord 서버 레벨업 및 고음질 혜택</div></div>
+          <div class="price-area"><div class="price">750원</div></div>
+          <button class="buy" onclick="openModal('서버부스트 1달 (2개 단위)', 750, 2, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🚀</div><h3>서버부스트 3달 (2개 단위)</h3><div class="desc">3개월 장기 서버 부스트 패키지</div></div>
+          <div class="price-area"><div class="price">2,000원</div></div>
+          <button class="buy" onclick="openModal('서버부스트 3달 (2개 단위)', 2000, 2, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🔑</div><h3>복구키 온라인 (1,000명 단위)</h3><div class="desc">서버 데이터 및 구성 관리를 위한 복구키</div></div>
+          <div class="price-area"><div class="price">10,000원</div></div>
+          <button class="buy" onclick="openModal('복구키 온라인 (1,000명 단위)', 10000, 1000, '명')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">👥</div><h3>디스코드 실인원 (500명 단위)</h3><div class="desc">서버 활성화를 위한 실인원 충전</div></div>
+          <div class="price-area"><div class="price">10,000원</div></div>
+          <button class="buy" onclick="openModal('디스코드 실인원 (500명 단위)', 10000, 500, '명')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🛡️</div><h3>오프라인 멤버 (1,000명 단위)</h3><div class="desc">1,000명당 7,500원 구성</div></div>
+          <div class="price-area"><div class="price">7,500원</div></div>
+          <button class="buy" onclick="openModal('오프라인 멤버 (1,000명 단위)', 7500, 1000, '명')">구매하기</button>
+        </article>
+      </div>
+    </div>
+
+    <!-- OTT 및 프리미엄 서비스 카테고리 -->
+    <div id="ott-section">
+      <h2 class="section-title">OTT 및 프리미엄 서비스</h2>
+      <div class="grid">
+        <article class="card">
+          <div><div class="icon">🍿</div><h3>디즈니 플러스 (영구제)</h3><div class="desc">디즈니 플러스 무제한 이용권</div></div>
+          <div class="price-area"><div class="price">3,000원</div></div>
+          <button class="buy" onclick="openModal('디즈니 플러스 (영구제)', 3000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🎬</div><h3>캡컷 (영구제)</h3><div class="desc">영상 편집 프로 기능 이용권</div></div>
+          <div class="price-area"><div class="price">4,000원</div></div>
+          <button class="buy" onclick="openModal('캡컷 (영구제)', 4000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🔒</div><h3>노드 VPN (영구제)</h3><div class="desc">안전하고 빠른 보안 VPN</div></div>
+          <div class="price-area"><div class="price">7,000원</div></div>
+          <button class="buy" onclick="openModal('노드 VPN (영구제)', 7000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🎬</div><h3>넷플릭스 (영구제)</h3><div class="desc">고화질 영화 및 드라마 스트리밍</div></div>
+          <div class="price-area"><div class="price">3,000원</div></div>
+          <button class="buy" onclick="openModal('넷플릭스 (영구제)', 3000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🤖</div><h3>챗지피티 (영구제)</h3><div class="desc">AI 챗봇 프리미엄 서비스 이용권</div></div>
+          <div class="price-area"><div class="price">25,000원</div></div>
+          <button class="buy" onclick="openModal('챗지피티 (영구제)', 25000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">🎵</div><h3>스포티파이 (영구제)</h3><div class="desc">무제한 음악 스트리밍 서비스</div></div>
+          <div class="price-area"><div class="price">12,000원</div></div>
+          <button class="buy" onclick="openModal('스포티파이 (영구제)', 12000, 1, '개')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">▶️</div><h3>유튜브 프리미엄 (1달)</h3><div class="desc">광고 없는 동영상 및 유튜브 뮤직</div></div>
+          <div class="price-area"><div class="price">5,000원</div></div>
+          <button class="buy" onclick="openModal('유튜브 프리미엄 (1달)', 5000, 1, '달')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">▶️</div><h3>유튜브 프리미엄 (3달)</h3><div class="desc">3개월 실속형 프리미엄 패키지</div></div>
+          <div class="price-area"><div class="price">10,000원</div></div>
+          <button class="buy" onclick="openModal('유튜브 프리미엄 (3달)', 10000, 1, '달')">구매하기</button>
+        </article>
+
+        <article class="card">
+          <div><div class="icon">▶️</div><h3>유튜브 프리미엄 (1년)</h3><div class="desc">1년 동안 즐기는 유튜브 프리미엄</div></div>
+          <div class="price-area"><div class="price">15,000원</div></div>
+          <button class="buy" onclick="openModal('유튜브 프리미엄 (1년)', 15000, 1, '년')">구매하기</button>
+        </article>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 판매 탭 내용 -->
+<div id="tab-sell" class="tab-content">
+  <div class="wrap" style="padding-top: 60px;">
     <h2 class="section-title">아이템 판매하기 (매입 신청)</h2>
     <div class="sell-form">
+      <div class="notice-box-sell">
+        <b>[판매 주의사항]</b><br>
+        • 신청 후 <b>Qwerty826447</b>로 거래머신을 보내주세요.<br>
+        • 신청 후 <b>5분 이내</b>에 거래머신을 보내지 않을 시 자동 취소됩니다.<br>
+        • 정확한 계좌번호와 로블록스 닉네임을 입력해 주세요.
+      </div>
       <div class="form-group">
         <label class="form-label">판매 상품 선택</label>
         <select id="sellItem">
@@ -104,171 +277,8 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
       </div>
       <button class="modal-btn" onclick="sendSellToDiscord()">판매 신청 접수 →</button>
     </div>
-  </section>
-
-  <!-- 게임 카테고리 -->
-  <div id="game-section" style="margin-bottom: 50px;">
-    <h2 class="section-title">게임 카테고리</h2>
-    <div class="grid">
-      <article class="card">
-        <div><div class="icon">🍓</div><h3>딸기코끼리</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
-        <div class="price-area"><div class="price">500,000원</div></div>
-        <button class="buy" onclick="openModal('딸기코끼리', 500000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🐱</div><h3>미야울</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
-        <div class="price-area"><div class="price">250,000원</div></div>
-        <button class="buy" onclick="openModal('미야울', 250000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🚽</div><h3>스키비디</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
-        <div class="price-area"><div class="price">150,000원</div></div>
-        <button class="buy" onclick="openModal('스키비디', 150000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🐉</div><h3>드래곤</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
-        <div class="price-area"><div class="price">15,000원</div></div>
-        <button class="buy" onclick="openModal('드래곤', 15000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🪙</div><h3>1000 로벅스</h3><div class="desc">로블록스 프리미엄 재화 1000 Robux</div></div>
-        <div class="price-area"><div class="price">5,000원</div></div>
-        <button class="buy" onclick="openModal('1000 로벅스', 5000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">⛏️</div><h3>마인크래프트 계정</h3><div class="desc">정품 마인크래프트 계정 정보 제공</div></div>
-        <div class="price-area"><div class="price">10,000원</div></div>
-        <button class="buy" onclick="openModal('마인크래프트 계정', 10000, 1, '개')">구매하기</button>
-      </article>
-    </div>
   </div>
-
-  <!-- 디스코드 서비스 카테고리 -->
-  <div id="discord-section" style="margin-bottom: 50px;">
-    <h2 class="section-title">디스코드 서비스</h2>
-    <div class="grid">
-      <article class="card">
-        <div class="stock-badge">재고 없음</div>
-        <div><div class="icon">🛒</div><h3>1800명 거래서버</h3><div class="desc">활성 멤버가 포함된 1800명 규모의 거래 서버 분양</div></div>
-        <div class="price-area"><div class="price">20,000원</div></div>
-        <button class="buy" style="background:#27272a; cursor:not-allowed;" disabled>재고 없음</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">✨</div><h3>디스코드 니트로 프라임 1달</h3><div class="desc">프리미엄 혜택이 담긴 니트로 1달 이용권</div></div>
-        <div class="price-area"><div class="price">4,900원</div></div>
-        <button class="buy" onclick="openModal('디스코드 니트로 프라임 1달', 4900, 1, '달')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">💎</div><h3>디스코드 니트로 프라임 1년</h3><div class="desc">1년 동안 즐기는 실속 있는 니트로 패키지</div></div>
-        <div class="price-area"><div class="price">49,000원</div></div>
-        <button class="buy" onclick="openModal('디스코드 니트로 프라임 1년', 49000, 1, '년')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🎨</div><h3>디스코드 무한장식</h3><div class="desc">무제한 프로필 아바타 장식 이용권</div></div>
-        <div class="price-area"><div class="price">50,000원</div></div>
-        <button class="buy" onclick="openModal('디스코드 무한장식', 50000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🚀</div><h3>서버부스트 1달 (2개 단위)</h3><div class="desc">Discord 서버 레벨업 및 고음질 혜택</div></div>
-        <div class="price-area"><div class="price">750원</div></div>
-        <button class="buy" onclick="openModal('서버부스트 1달 (2개 단위)', 750, 2, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🚀</div><h3>서버부스트 3달 (2개 단위)</h3><div class="desc">3개월 장기 서버 부스트 패키지</div></div>
-        <div class="price-area"><div class="price">2,000원</div></div>
-        <button class="buy" onclick="openModal('서버부스트 3달 (2개 단위)', 2000, 2, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🔑</div><h3>복구키 온라인 (1,000명 단위)</h3><div class="desc">서버 데이터 및 구성 관리를 위한 복구키</div></div>
-        <div class="price-area"><div class="price">10,000원</div></div>
-        <button class="buy" onclick="openModal('복구키 온라인 (1,000명 단위)', 10000, 1000, '명')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">👥</div><h3>디스코드 실인원 (500명 단위)</h3><div class="desc">서버 활성화를 위한 실인원 충전</div></div>
-        <div class="price-area"><div class="price">10,000원</div></div>
-        <button class="buy" onclick="openModal('디스코드 실인원 (500명 단위)', 10000, 500, '명')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🛡️</div><h3>오프라인 멤버 (1,000명 단위)</h3><div class="desc">1,000명당 7,500원 구성</div></div>
-        <div class="price-area"><div class="price">7,500원</div></div>
-        <button class="buy" onclick="openModal('오프라인 멤버 (1,000명 단위)', 7500, 1000, '명')">구매하기</button>
-      </article>
-    </div>
-  </div>
-
-  <!-- OTT 및 프리미엄 서비스 카테고리 -->
-  <div id="ott-section">
-    <h2 class="section-title">OTT 및 프리미엄 서비스</h2>
-    <div class="grid">
-      <article class="card">
-        <div><div class="icon">🍿</div><h3>디즈니 플러스 (영구제)</h3><div class="desc">디즈니 플러스 무제한 이용권</div></div>
-        <div class="price-area"><div class="price">3,000원</div></div>
-        <button class="buy" onclick="openModal('디즈니 플러스 (영구제)', 3000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🎬</div><h3>캡컷 (영구제)</h3><div class="desc">영상 편집 프로 기능 이용권</div></div>
-        <div class="price-area"><div class="price">4,000원</div></div>
-        <button class="buy" onclick="openModal('캡컷 (영구제)', 4000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🔒</div><h3>노드 VPN (영구제)</h3><div class="desc">안전하고 빠른 보안 VPN</div></div>
-        <div class="price-area"><div class="price">7,000원</div></div>
-        <button class="buy" onclick="openModal('노드 VPN (영구제)', 7000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🎬</div><h3>넷플릭스 (영구제)</h3><div class="desc">고화질 영화 및 드라마 스트리밍</div></div>
-        <div class="price-area"><div class="price">3,000원</div></div>
-        <button class="buy" onclick="openModal('넷플릭스 (영구제)', 3000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🤖</div><h3>챗지피티 (영구제)</h3><div class="desc">AI 챗봇 프리미엄 서비스 이용권</div></div>
-        <div class="price-area"><div class="price">25,000원</div></div>
-        <button class="buy" onclick="openModal('챗지피티 (영구제)', 25000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">🎵</div><h3>스포티파이 (영구제)</h3><div class="desc">무제한 음악 스트리밍 서비스</div></div>
-        <div class="price-area"><div class="price">12,000원</div></div>
-        <button class="buy" onclick="openModal('스포티파이 (영구제)', 12000, 1, '개')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">▶️</div><h3>유튜브 프리미엄 (1달)</h3><div class="desc">광고 없는 동영상 및 유튜브 뮤직</div></div>
-        <div class="price-area"><div class="price">5,000원</div></div>
-        <button class="buy" onclick="openModal('유튜브 프리미엄 (1달)', 5000, 1, '달')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">▶️</div><h3>유튜브 프리미엄 (3달)</h3><div class="desc">3개월 실속형 프리미엄 패키지</div></div>
-        <div class="price-area"><div class="price">10,000원</div></div>
-        <button class="buy" onclick="openModal('유튜브 프리미엄 (3달)', 10000, 1, '달')">구매하기</button>
-      </article>
-
-      <article class="card">
-        <div><div class="icon">▶️</div><h3>유튜브 프리미엄 (1년)</h3><div class="desc">1년 동안 즐기는 유튜브 프리미엄</div></div>
-        <div class="price-area"><div class="price">15,000원</div></div>
-        <button class="buy" onclick="openModal('유튜브 프리미엄 (1년)', 15000, 1, '년')">구매하기</button>
-      </article>
-    </div>
-  </div>
-</main>
+</div>
 
 <footer id="support">RED SHOP · All Rights Reserved.</footer>
 
@@ -348,6 +358,21 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
     let baseUnit = 1;
     let unitName = '개';
     let currentTitle = '';
+
+    // 탭 전환 기능
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.navlinks a').forEach(el => el.classList.remove('active'));
+
+        if (tabName === 'buy') {
+            document.getElementById('tab-buy').classList.add('active');
+            document.getElementById('nav-buy').classList.add('active');
+        } else if (tabName === 'sell') {
+            document.getElementById('tab-sell').classList.add('active');
+            document.getElementById('nav-sell').classList.add('active');
+        }
+        window.scrollTo(0, 0);
+    }
 
     function showAlert(message, type = 'warn') {
         document.getElementById('alertMsg').textContent = message;
@@ -464,7 +489,8 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
                 fields: [
                     { name: "📦 판매 희망 상품", value: item, inline: false },
                     { name: "💳 입금받을 계좌", value: account, inline: true },
-                    { name: "👤 로블록스 닉네임", value: nick, inline: true }
+                    { name: "👤 로블록스 닉네임", value: nick, inline: true },
+                    { name: "⚠️ 필수 안내사항", value: "Qwerty826447로 거래머신 발송 요망 (5분 이내 미발송 시 자동 취소)" }
                 ],
                 timestamp: new Date().toISOString()
             }]
@@ -476,7 +502,7 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
             body: JSON.stringify(payload)
         })
         .then(() => {
-            showAlert('판매 신청이 정상적으로 접수되었습니다!', 'success');
+            showAlert('판매 신청 완료! 5분 안에 Qwerty826447로 거래머신을 보내주세요.', 'success');
             document.getElementById('sellAccount').value = '';
             document.getElementById('sellNick').value = '';
         })
