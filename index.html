@@ -379,8 +379,46 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
             return;
         }
 
-        showAlert('주문이 정상적으로 접수되었습니다. 입금 확인 후 처리됩니다.', 'success');
-        closeModal();
+        const step = parseInt(document.getElementById('qtyRange').value);
+        const actualAmount = step * baseUnit;
+        const totalPriceText = document.getElementById('totalPrice').textContent;
+
+        // ★ 여기에 디스코드 채널에서 발급받은 웹훅 URL을 입력해 주세요!
+        const webhookUrl = 'YOUR_WEBHOOK_URL_HERE';
+
+        const payload = {
+            embeds: [{
+                title: "🛒 새로운 상품 주문이 접수되었습니다!",
+                color: 15728680,
+                fields: [
+                    { name: "📦 상품명", value: currentTitle, inline: false },
+                    { name: "🔢 수량", value: `${actualAmount}${unitName}`, inline: true },
+                    { name: "💰 총 결제금액", value: totalPriceText, inline: true },
+                    { name: "👤 입금자명", value: depositor, inline: true },
+                    { name: "💬 디스코드 ID", value: discordId, inline: true },
+                    { name: "🔗 서버 정보 / 이메일", value: link, inline: false }
+                ],
+                timestamp: new Date().toISOString()
+            }]
+        };
+
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (response.ok) {
+                showAlert('주문이 정상적으로 접수되었습니다. 입금 확인 후 처리됩니다.', 'success');
+                closeModal();
+            } else {
+                showAlert('주문 전송 중 오류가 발생했습니다. 관리자에게 문의하세요.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('네트워크 오류가 발생했습니다.');
+        });
     }
 </script>
 </body>
