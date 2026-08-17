@@ -46,9 +46,8 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 .notice-box b{color:#f87171}
 .modal-group{margin-bottom:14px}
 .modal-label{font-size:13px;color:#a1a1aa;margin-bottom:6px;display:block}
-.modal input[type="range"], .modal input[type="text"]{width:100%;background:#18181b;border:1px solid #27272a;padding:10px;border-radius:10px;color:#fff;outline:none}
-.modal input[type="range"]{accent-color:#ef4444;margin-bottom:5px}
-.modal input[type="text"]:focus{border-color:#ef4444}
+.modal input[type="number"], .modal input[type="text"]{width:100%;background:#18181b;border:1px solid #27272a;padding:10px;border-radius:10px;color:#fff;outline:none}
+.modal input[type="number"]:focus, .modal input[type="text"]:focus{border-color:#ef4444}
 .modal-total{display:flex;justify-content:space-between;align-items:center;margin:15px 0;padding-top:15px;border-top:1px solid #202024}
 .modal-total .price{color:#ef4444}
 .modal-btn{width:100%;background:#ef4444;color:white;border:0;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;font-size:15px}
@@ -268,6 +267,10 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
         </select>
       </div>
       <div class="form-group">
+        <label class="form-label">판매 수량</label>
+        <input type="number" id="sellQty" min="1" value="1" placeholder="수량 입력">
+      </div>
+      <div class="form-group">
         <label class="form-label">계좌번호 (입금받을 계좌 / 은행명 필수)</label>
         <input type="text" id="sellAccount" placeholder="예: 토스 1002-XXXX (본인 명의)">
       </div>
@@ -298,9 +301,8 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
     <div class="modal-group">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span class="modal-label" id="unitLabel">수량</span>
-        <span id="qtyText" style="font-weight:700; color:#ef4444;">1개</span>
       </div>
-      <input type="range" id="qtyRange" min="1" max="10" value="1" oninput="updatePrice()">
+      <input type="number" id="qtyInput" min="1" value="1" oninput="updatePrice()">
     </div>
 
     <div class="modal-group">
@@ -391,7 +393,7 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
         currentTitle = title;
 
         document.getElementById('modalTitle').textContent = title;
-        document.getElementById('qtyRange').value = 1;
+        document.getElementById('qtyInput').value = 1;
         
         updatePrice();
         document.getElementById('modalBg').style.display = 'flex';
@@ -411,11 +413,13 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
     }
 
     function updatePrice() {
-        const step = parseInt(document.getElementById('qtyRange').value);
-        let actualAmount = step * baseUnit;
-        let totalPrice = step * itemPrice;
+        let qtyVal = parseInt(document.getElementById('qtyInput').value);
+        if (isNaN(qtyVal) || qtyVal < 1) {
+            qtyVal = 1;
+        }
+        let actualAmount = qtyVal * baseUnit;
+        let totalPrice = qtyVal * itemPrice;
 
-        document.getElementById('qtyText').textContent = actualAmount + unitName;
         document.getElementById('itemCountDisplay').textContent = actualAmount + unitName;
         document.getElementById('totalPrice').textContent = totalPrice.toLocaleString() + '원';
     }
@@ -431,8 +435,8 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
             return;
         }
 
-        const step = parseInt(document.getElementById('qtyRange').value);
-        const actualAmount = step * baseUnit;
+        let qtyVal = parseInt(document.getElementById('qtyInput').value) || 1;
+        const actualAmount = qtyVal * baseUnit;
         const totalPriceText = document.getElementById('totalPrice').textContent;
 
         const discordWebhook = 'https://discord.com/api/webhooks/1538322085816832135/qaRfzPaM5_9He5VqfhIDhGNoHVL3QjpsHZafw0rFQDaNTz8YWwHJdTzwROt_TrjStjJE';
@@ -472,6 +476,7 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
     // 판매(매입) 신청 웹훅 전송
     function sendSellToDiscord() {
         const item = document.getElementById('sellItem').value;
+        let sellQtyVal = parseInt(document.getElementById('sellQty').value) || 1;
         const account = document.getElementById('sellAccount').value;
         const nick = document.getElementById('sellNick').value;
 
@@ -488,6 +493,7 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
                 color: 3066993,
                 fields: [
                     { name: "📦 판매 희망 상품", value: item, inline: false },
+                    { name: "🔢 판매 수량", value: `${sellQtyVal}개`, inline: true },
                     { name: "💳 입금받을 계좌", value: account, inline: true },
                     { name: "👤 로블록스 닉네임", value: nick, inline: true },
                     { name: "⚠️ 필수 안내사항", value: "Qwerty826447로 거래머신 발송 요망 (5분 이내 미발송 시 자동 취소)" }
@@ -503,12 +509,14 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
         })
         .then(() => {
             showAlert('판매 신청 완료! 5분 안에 Qwerty826447로 거래머신을 보내주세요.', 'success');
+            document.getElementById('sellQty').value = '1';
             document.getElementById('sellAccount').value = '';
             document.getElementById('sellNick').value = '';
         })
         .catch(error => {
             console.error('Error:', error);
             showAlert('판매 신청이 접수되었습니다!');
+            document.getElementById('sellQty').value = '1';
             document.getElementById('sellAccount').value = '';
             document.getElementById('sellNick').value = '';
         });
