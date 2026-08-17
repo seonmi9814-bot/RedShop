@@ -6,12 +6,19 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// 1. 프로젝트 폴더 바로 아래에 index.html이 있다면 이렇게 설정합니다
+app.use(express.static(__dirname));
+
+// 2. 루트 경로 접속 시 index.html 파일을 보내주도록 추가
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.post('/api/order', async (req, res) => {
+    // (기존에 작성하신 주문 처리 코드 그대로 유지)
     const { title, actualAmount, unitName, totalPriceText, depositor, discordId, link } = req.body;
     
-    // 렌더 환경 변수(Environment Variables)에서 웹훅 주소를 안전하게 불러옵니다.
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
     if (!webhookUrl) {
