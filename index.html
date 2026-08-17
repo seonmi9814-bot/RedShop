@@ -11,8 +11,6 @@ a{text-decoration:none;color:inherit}.nav{height:76px;border-bottom:1px solid #2
 .logo{font-size:24px;font-weight:900;letter-spacing:2px}.logo span{color:#ff3030}
 .navlinks{display:flex;gap:30px;color:#a1a1aa;font-size:14px;font-weight:500}.navlinks a:hover{color:#fff}
 .nav-right{display:flex;align-items:center;gap:12px}
-.discord-login-btn{background:#5865F2;color:#fff;padding:8px 14px;border-radius:12px;font-size:14px;font-weight:600;transition:.2s}
-.discord-login-btn:hover{background:#4752C4}
 .hero{padding:100px 7% 70px;text-align:center;background:radial-gradient(circle at 50% 0,#450a0a 0,transparent 50%)}
 .badge{display:inline-block;color:#f87171;border:1px solid #7f1d1d;background:#450a0a;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.5px}
 h1{font-size:52px;margin:20px 0 12px;font-weight:800;line-height:1.2}.hero p{color:#a1a1aa;font-size:17px;margin-bottom:30px}.btn{display:inline-block;background:#ef4444;color:white;padding:14px 28px;border-radius:12px;font-weight:700;box-shadow:0 10px 20px rgba(239, 68, 68, 0.2);transition:.2s}.btn:hover{background:#dc2626;transform:translateY(-2px)}
@@ -63,9 +61,7 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
     <a href="#ott-section">OTT</a>
     <a href="#" onclick="openSupportModal(event)">고객지원</a>
   </div>
-  <div class="nav-right">
-    <a href="/auth/login" class="discord-login-btn" id="loginBtn">디스코드 로그인</a>
-  </div>
+  <div class="nav-right"></div>
 </nav>
 
 <header class="hero">
@@ -80,6 +76,30 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
   <div id="game-section" style="margin-bottom: 50px;">
     <h2 class="section-title">게임 카테고리</h2>
     <div class="grid">
+      <article class="card">
+        <div><div class="icon">🍓</div><h3>딸기코끼리</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
+        <div class="price-area"><div class="price">700,000원</div></div>
+        <button class="buy" onclick="openModal('딸기코끼리', 700000, 1, '개')">구매하기</button>
+      </article>
+
+      <article class="card">
+        <div><div class="icon">🐱</div><h3>미야울</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
+        <div class="price-area"><div class="price">300,000원</div></div>
+        <button class="buy" onclick="openModal('미야울', 300000, 1, '개')">구매하기</button>
+      </article>
+
+      <article class="card">
+        <div><div class="icon">🚽</div><h3>스키비디</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
+        <div class="price-area"><div class="price">200,000원</div></div>
+        <button class="buy" onclick="openModal('스키비디', 200000, 1, '개')">구매하기</button>
+      </article>
+
+      <article class="card">
+        <div><div class="icon">🐉</div><h3>드래곤</h3><div class="desc">프리미엄 게임 아이템 / 캐릭터</div></div>
+        <div class="price-area"><div class="price">18,000원</div></div>
+        <button class="buy" onclick="openModal('드래곤', 18000, 1, '개')">구매하기</button>
+      </article>
+
       <article class="card">
         <div><div class="icon">🪙</div><h3>1000 로벅스</h3><div class="desc">로블록스 프리미엄 재화 1000 Robux</div></div>
         <div class="price-area"><div class="price">5,000원</div></div>
@@ -223,7 +243,7 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <h2 id="modalTitle">상품 이름</h2>
-    <div class="modal-sub">입금 계좌: 카카오뱅크 7777-03-5887523 (윤세종)</div>
+    <div class="modal-sub">입금 계좌: 토스 1002-6105-2645 (윤세종)</div>
     
     <div class="notice-box">
       • 작업은 <b>1분 ~ 최대 3시간</b>까지 소요될 수 있습니다.<br>
@@ -242,6 +262,11 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
     <div class="modal-group">
       <span class="modal-label">입금자명 (본인 성함 필수)</span>
       <input type="text" id="depositorName" placeholder="입금하시는 분 성함">
+    </div>
+
+    <div class="modal-group">
+      <span class="modal-label">디스코드 아이디 (연락용)</span>
+      <input type="text" id="discordId" placeholder="예: username#0000">
     </div>
 
     <div class="modal-group">
@@ -285,15 +310,6 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 </div>
 
 <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get('username');
-    if (username) {
-        const loginBtn = document.getElementById('loginBtn');
-        loginBtn.textContent = username + '님 환영합니다';
-        loginBtn.href = "#";
-        loginBtn.style.background = "#23a559";
-    }
-
     let itemPrice = 0;
     let baseUnit = 1;
     let unitName = '개';
@@ -347,14 +363,15 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 
     function sendOrderToDiscord() {
         const depositor = document.getElementById('depositorName').value;
+        const discordId = document.getElementById('discordId').value;
         const link = document.getElementById('inviteLink').value;
 
-        if (!username) {
-            showAlert('먼저 디스코드 로그인을 진행해 주세요!');
-            return;
-        }
         if (!depositor) {
             showAlert('입금자명을 입력해 주세요!');
+            return;
+        }
+        if (!discordId) {
+            showAlert('디스코드 아이디를 입력해 주세요!');
             return;
         }
         if (!link) {
