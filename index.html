@@ -383,37 +383,29 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
         const actualAmount = step * baseUnit;
         const totalPriceText = document.getElementById('totalPrice').textContent;
 
-        // CORS 우회 프록시를 적용한 웹훅 URL
-        const discordWebhook = 'https://discord.com/api/webhooks/1538322085816832135/qaRfzPaM5_9He5VqfhIDhGNoHVL3QjpsHZafw0rFQDaNTz8YWwHJdTzwROt_TrjStjJE';
-        const webhookUrl = 'https://corsproxy.io/?' + encodeURIComponent(discordWebhook);
-
-        const payload = {
-            embeds: [{
-                title: "🛒 새로운 상품 주문이 접수되었습니다!",
-                color: 15728680,
-                fields: [
-                    { name: "📦 상품명", value: currentTitle, inline: false },
-                    { name: "🔢 수량", value: `${actualAmount}${unitName}`, inline: true },
-                    { name: "💰 총 결제금액", value: totalPriceText, inline: true },
-                    { name: "👤 입금자명", value: depositor, inline: true },
-                    { name: "💬 디스코드 ID", value: discordId, inline: true },
-                    { name: "🔗 서버 정보 / 이메일", value: link, inline: false }
-                ],
-                timestamp: new Date().toISOString()
-            }]
+        const orderData = {
+            title: currentTitle,
+            actualAmount: actualAmount,
+            unitName: unitName,
+            totalPriceText: totalPriceText,
+            depositor: depositor,
+            discordId: discordId,
+            link: link
         };
 
-        fetch(webhookUrl, {
+        // 내 서버 백엔드 API로 안전하게 전달
+        fetch('/api/order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(orderData)
         })
-        .then(response => {
-            if (response.ok) {
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
                 showAlert('주문이 정상적으로 접수되었습니다. 입금 확인 후 처리됩니다.', 'success');
                 closeModal();
             } else {
-                showAlert('주문 전송 중 오류가 발생했습니다. 관리자에게 문의하세요.');
+                showAlert('주문 전송 중 오류가 발생했습니다.');
             }
         })
         .catch(error => {
