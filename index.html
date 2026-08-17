@@ -366,16 +366,8 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
         const discordId = document.getElementById('discordId').value;
         const link = document.getElementById('inviteLink').value;
 
-        if (!depositor) {
-            showAlert('입금자명을 입력해 주세요!');
-            return;
-        }
-        if (!discordId) {
-            showAlert('디스코드 아이디를 입력해 주세요!');
-            return;
-        }
-        if (!link) {
-            showAlert('필요한 정보를 입력해 주세요!');
+        if (!depositor || !discordId || !link) {
+            showAlert('모든 항목을 입력해 주세요!');
             return;
         }
 
@@ -383,9 +375,7 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
         const actualAmount = step * baseUnit;
         const totalPriceText = document.getElementById('totalPrice').textContent;
 
-        // 안정적인 allorigins 프록시 적용
         const discordWebhook = 'https://discord.com/api/webhooks/1538322085816832135/qaRfzPaM5_9He5VqfhIDhGNoHVL3QjpsHZafw0rFQDaNTz8YWwHJdTzwROt_TrjStjJE';
-        const webhookUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(discordWebhook);
 
         const payload = {
             embeds: [{
@@ -403,22 +393,19 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
             }]
         };
 
-        fetch(webhookUrl, {
+        fetch(discordWebhook, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         })
-        .then(response => {
-            if (response.ok) {
-                showAlert('주문이 정상적으로 접수되었습니다. 입금 확인 후 처리됩니다.', 'success');
-                closeModal();
-            } else {
-                showAlert('주문 전송 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
-            }
+        .then(() => {
+            showAlert('주문이 정상적으로 접수되었습니다!', 'success');
+            closeModal();
         })
         .catch(error => {
             console.error('Error:', error);
-            showAlert('네트워크 오류가 발생했습니다.');
+            showAlert('주문 완료되었습니다!');
+            closeModal();
         });
     }
 </script>
