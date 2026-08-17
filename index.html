@@ -9,7 +9,7 @@
 a{text-decoration:none;color:inherit}.nav{height:76px;border-bottom:1px solid #202024;display:flex;align-items:center;justify-content:space-between;padding:0 7%;background:rgba(11, 11, 13, 0.85);backdrop-filter:blur(10px);position:sticky;top:0;z-index:10}
 .nav-left{display:flex;align-items:center;gap:15px}
 .logo{font-size:24px;font-weight:900;letter-spacing:2px}.logo span{color:#ff3030}
-.navlinks{display:flex;gap:30px;color:#a1a1aa;font-size:14px;font-weight:500}.navlinks a:hover{color:#fff}
+.navlinks{display:flex;gap:20px;color:#a1a1aa;font-size:14px;font-weight:500}.navlinks a:hover{color:#fff}
 .nav-right{display:flex;align-items:center;gap:12px}
 .hero{padding:100px 7% 70px;text-align:center;background:radial-gradient(circle at 50% 0,#450a0a 0,transparent 50%)}
 .badge{display:inline-block;color:#f87171;border:1px solid #7f1d1d;background:#450a0a;padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.5px}
@@ -24,6 +24,12 @@ h1{font-size:52px;margin:20px 0 12px;font-weight:800;line-height:1.2}.hero p{col
 .price-area{margin-bottom:20px}.price{font-size:24px;font-weight:900;color:#fff}
 .buy{width:100%;border:0;background:#ef4444;color:white;padding:13px;border-radius:10px;font-weight:700;cursor:pointer;transition:.2s}.buy:hover{background:#dc2626}
 footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a;font-size:13px;background:#0b0b0d}
+
+/* 판매 전용 폼 스타일 */
+.sell-form{background:#121216;padding:30px;border-radius:16px;border:1px solid #27272a;max-width:600px;margin:auto}
+.form-group{margin-bottom:20px}.form-label{display:block;margin-bottom:8px;font-size:14px;color:#a1a1aa}
+.sell-form input, .sell-form select{width:100%;padding:12px;background:#18181b;border:1px solid #27272a;border-radius:8px;color:#fff;outline:none}
+.sell-form input:focus, .sell-form select:focus{border-color:#ef4444}
 
 /* 모달 스타일 */
 .modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;z-index:100;display:none}
@@ -60,6 +66,8 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
     <a href="#discord-section">디스코드</a>
     <a href="#ott-section">OTT</a>
     <a href="#" onclick="openSupportModal(event)">고객지원</a>
+    <a href="#products" style="color:#ef4444">구매</a>
+    <a href="#sell-section" style="color:#ef4444">판매</a>
   </div>
   <div class="nav-right"></div>
 </nav>
@@ -72,6 +80,32 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
 </header>
 
 <main class="wrap" id="products">
+  <!-- 판매(매입) 신청 섹션 -->
+  <section id="sell-section" style="margin-bottom: 60px;">
+    <h2 class="section-title">아이템 판매하기 (매입 신청)</h2>
+    <div class="sell-form">
+      <div class="form-group">
+        <label class="form-label">판매 상품 선택</label>
+        <select id="sellItem">
+          <option value="딸기코끼리 (700,000원)">딸기코끼리 - 700,000원</option>
+          <option value="미야울 (400,000원)">미야울 - 400,000원</option>
+          <option value="스키비디 (250,000원)">스키비디 - 250,000원</option>
+          <option value="드래곤 (25,000원)">드래곤 - 25,000원</option>
+          <option value="변이가라마 (7,000원)">변이가라마 - 7,000원</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">계좌번호 (입금받을 계좌 / 은행명 필수)</label>
+        <input type="text" id="sellAccount" placeholder="예: 토스 1002-XXXX (본인 명의)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">로블록스 닉네임</label>
+        <input type="text" id="sellNick" placeholder="본인의 로블록스 닉네임 입력">
+      </div>
+      <button class="modal-btn" onclick="sendSellToDiscord()">판매 신청 접수 →</button>
+    </div>
+  </section>
+
   <!-- 게임 카테고리 -->
   <div id="game-section" style="margin-bottom: 50px;">
     <h2 class="section-title">게임 카테고리</h2>
@@ -119,10 +153,10 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
     <h2 class="section-title">디스코드 서비스</h2>
     <div class="grid">
       <article class="card">
-        <div class="stock-badge">재고 1개</div>
+        <div class="stock-badge">재고 없음</div>
         <div><div class="icon">🛒</div><h3>1800명 거래서버</h3><div class="desc">활성 멤버가 포함된 1800명 규모의 거래 서버 분양</div></div>
         <div class="price-area"><div class="price">20,000원</div></div>
-        <button class="buy" onclick="openModal('1800명 거래서버', 20000, 1, '개')">구매하기</button>
+        <button class="buy" style="background:#27272a; cursor:not-allowed;" disabled>재고 없음</button>
       </article>
 
       <article class="card">
@@ -361,6 +395,7 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
         document.getElementById('totalPrice').textContent = totalPrice.toLocaleString() + '원';
     }
 
+    // 구매 주문 웹훅 전송
     function sendOrderToDiscord() {
         const depositor = document.getElementById('depositorName').value;
         const discordId = document.getElementById('discordId').value;
@@ -406,6 +441,50 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
             console.error('Error:', error);
             showAlert('주문 완료되었습니다!');
             closeModal();
+        });
+    }
+
+    // 판매(매입) 신청 웹훅 전송
+    function sendSellToDiscord() {
+        const item = document.getElementById('sellItem').value;
+        const account = document.getElementById('sellAccount').value;
+        const nick = document.getElementById('sellNick').value;
+
+        if (!account || !nick) {
+            showAlert('계좌번호와 로블록스 닉네임을 모두 입력해 주세요!');
+            return;
+        }
+
+        const discordWebhook = 'https://discord.com/api/webhooks/1538322085816832135/qaRfzPaM5_9He5VqfhIDhGNoHVL3QjpsHZafw0rFQDaNTz8YWwHJdTzwROt_TrjStjJE';
+
+        const payload = {
+            embeds: [{
+                title: "💰 새로운 판매(매입) 신청이 접수되었습니다!",
+                color: 3066993,
+                fields: [
+                    { name: "📦 판매 희망 상품", value: item, inline: false },
+                    { name: "💳 입금받을 계좌", value: account, inline: true },
+                    { name: "👤 로블록스 닉네임", value: nick, inline: true }
+                ],
+                timestamp: new Date().toISOString()
+            }]
+        };
+
+        fetch(discordWebhook, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            showAlert('판매 신청이 정상적으로 접수되었습니다!', 'success');
+            document.getElementById('sellAccount').value = '';
+            document.getElementById('sellNick').value = '';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('판매 신청이 접수되었습니다!');
+            document.getElementById('sellAccount').value = '';
+            document.getElementById('sellNick').value = '';
         });
     }
 </script>
