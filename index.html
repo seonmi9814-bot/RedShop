@@ -383,8 +383,9 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
         const actualAmount = step * baseUnit;
         const totalPriceText = document.getElementById('totalPrice').textContent;
 
-        // 하이니스께서 제공해주신 디스코드 웹훅 URL 적용 완료
-        const webhookUrl = 'https://discord.com/api/webhooks/1538322085816832135/qaRfzPaM5_9He5VqfhIDhGNoHVL3QjpsHZafw0rFQDaNTz8YWwHJdTzwROt_TrjStjJE';
+        // CORS 우회 프록시를 적용한 웹훅 URL
+        const discordWebhook = 'https://discord.com/api/webhooks/1538322085816832135/qaRfzPaM5_9He5VqfhIDhGNoHVL3QjpsHZafw0rFQDaNTz8YWwHJdTzwROt_TrjStjJE';
+        const webhookUrl = 'https://corsproxy.io/?' + encodeURIComponent(discordWebhook);
 
         const payload = {
             embeds: [{
@@ -412,7 +413,7 @@ footer{border-top:1px solid #202024;text-align:center;padding:30px;color:#71717a
                 showAlert('주문이 정상적으로 접수되었습니다. 입금 확인 후 처리됩니다.', 'success');
                 closeModal();
             } else {
-                showAlert('주문 전송 중 오류가 발생했습니다. 웹훅 설정을 확인해 주세요.');
+                showAlert('주문 전송 중 오류가 발생했습니다. 관리자에게 문의하세요.');
             }
         })
         .catch(error => {
